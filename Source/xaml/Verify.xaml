@@ -1,0 +1,61 @@
+<Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Margin="36,6,36,24">
+  <Grid.RowDefinitions>
+    <RowDefinition Height="Auto"/>
+    <RowDefinition Height="Auto"/>
+    <RowDefinition Height="*"/>
+    <RowDefinition Height="Auto"/>
+  </Grid.RowDefinitions>
+  <StackPanel>
+    <TextBlock Text="Verify &amp; fix" Style="{StaticResource T.H1}"/>
+    <TextBlock Text="Compares this PC with a backup: programs, services, scheduled tasks, startup items, environment variables, power plan, hosts file, fonts, WSL, drive letters, Docker and the media server. Run it after a restore - and after every big Windows update, which can quietly drop tasks and services." Style="{StaticResource T.Muted}" Margin="0,6,0,0" MaxWidth="860" HorizontalAlignment="Left"/>
+  </StackPanel>
+
+  <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,18,0,0" Padding="16,12">
+    <DockPanel>
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+        <Button x:Name="ChangeBackup" Style="{StaticResource Btn.Ghost}" Content="Other backup..."/>
+        <Button x:Name="CheckNow" Style="{StaticResource Btn.Primary}" Margin="8,0,0,0">
+          <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE9D5;" FontFamily="{StaticResource IconFont}" Margin="0,0,10,0" VerticalAlignment="Center"/><TextBlock x:Name="CheckText" Text="Check now"/></StackPanel>
+        </Button>
+      </StackPanel>
+      <TextBlock DockPanel.Dock="Left" Text="&#xE74E;" Style="{StaticResource T.Icon}" FontSize="20" Foreground="{DynamicResource B.Accent}" Margin="0,0,14,0"/>
+      <StackPanel VerticalAlignment="Center">
+        <TextBlock x:Name="BackupTitle" Text="No backup found" Style="{StaticResource T.H3}"/>
+        <TextBlock x:Name="BackupLine" Text="" Style="{StaticResource T.Small}"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+
+  <Grid Grid.Row="2" Margin="0,12,0,0">
+    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <Border Style="{StaticResource Card}" Padding="0">
+      <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <DockPanel Margin="20,14,16,8">
+          <CheckBox x:Name="OnlyProblems" DockPanel.Dock="Right" Style="{StaticResource Switch}" IsChecked="True" VerticalAlignment="Center">
+            <TextBlock Text="Only what needs attention" Foreground="{DynamicResource B.TextMuted}"/>
+          </CheckBox>
+          <StackPanel>
+            <TextBlock x:Name="ResultTitle" Text="Not checked yet" Style="{StaticResource T.H2}"/>
+            <TextBlock x:Name="ResultLine" Text="Press &quot;Check now&quot; - it takes about a minute and changes nothing." Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+          </StackPanel>
+        </DockPanel>
+        <ProgressBar x:Name="CheckBar" Grid.Row="0" VerticalAlignment="Bottom" Height="3" Margin="20,0,16,0" IsIndeterminate="True" Visibility="Collapsed"/>
+        <TreeView x:Name="Results" Grid.Row="1" Margin="10,4,8,10" ItemTemplate="{StaticResource ItemTemplate}"/>
+      </Grid>
+    </Border>
+    <Border x:Name="LogCard" Grid.Row="1" Style="{StaticResource Card}" Margin="0,12,0,0" Padding="6" Height="220" Visibility="Collapsed">
+      <ListBox x:Name="LogList" ItemContainerStyle="{StaticResource PlainItem}" VirtualizingStackPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True"/>
+    </Border>
+  </Grid>
+
+  <DockPanel Grid.Row="3" Margin="0,14,0,0">
+    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+      <Button x:Name="FixSelected" Style="{StaticResource Btn.Primary}" IsEnabled="False">
+        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE90F;" FontFamily="{StaticResource IconFont}" Margin="0,0,10,0" VerticalAlignment="Center"/><TextBlock x:Name="FixText" Text="Fix the ticked items"/></StackPanel>
+      </Button>
+    </StackPanel>
+    <TextBlock x:Name="FootLine" Text="Fixes use the same code as the restore: a missing task or service is recreated from the backup, a moved program is found where it is now." Style="{StaticResource T.Small}" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,16,0"/>
+  </DockPanel>
+</Grid>

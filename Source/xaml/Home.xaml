@@ -1,0 +1,75 @@
+<ScrollViewer xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              VerticalScrollBarVisibility="Auto" Focusable="False">
+  <StackPanel Margin="36,6,36,36" MaxWidth="1180">
+    <TextBlock x:Name="Hello" Text="Your PC" Style="{StaticResource T.H1}"/>
+    <TextBlock x:Name="PcLine" Text="" Style="{StaticResource T.Muted}" Margin="0,6,0,0"/>
+
+    <Border x:Name="ResumeCard" Style="{StaticResource Card}" Margin="0,22,0,0" BorderBrush="{DynamicResource B.Accent}" Visibility="Collapsed">
+      <DockPanel>
+        <Button x:Name="ResumeButton" DockPanel.Dock="Right" Style="{StaticResource Btn.Primary}" Content="Continue the restore" VerticalAlignment="Center"/>
+        <StackPanel Margin="0,0,16,0">
+          <TextBlock Text="A restore on this PC is not finished" Style="{StaticResource T.H3}"/>
+          <TextBlock x:Name="ResumeText" Text="" Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <TextBlock Text="What would you like to do?" Style="{StaticResource T.H2}" Margin="0,30,0,14"/>
+    <UniformGrid x:Name="Actions" Columns="2" Rows="2">
+      <Button x:Name="ActBackup" Style="{StaticResource Btn.Card}" Margin="0,0,8,8">
+        <DockPanel>
+          <Border DockPanel.Dock="Left" Width="44" Height="44" CornerRadius="11" Background="{DynamicResource B.AccentSoft}" VerticalAlignment="Top">
+            <TextBlock Text="&#xE898;" Style="{StaticResource T.Icon}" FontSize="20" Foreground="{DynamicResource B.Accent}"/>
+          </Border>
+          <StackPanel Margin="16,0,0,0">
+            <TextBlock Text="Scan &amp; back up this PC" Style="{StaticResource T.H3}" FontSize="15"/>
+            <TextBlock Text="Finds every program, setting, automation and file on all drives. You choose what to keep, then it is copied to another drive." Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+          </StackPanel>
+        </DockPanel>
+      </Button>
+      <Button x:Name="ActRestore" Style="{StaticResource Btn.Card}" Margin="8,0,0,8">
+        <DockPanel>
+          <Border DockPanel.Dock="Left" Width="44" Height="44" CornerRadius="11" Background="{DynamicResource B.OkSoft}" VerticalAlignment="Top">
+            <TextBlock Text="&#xE896;" Style="{StaticResource T.Icon}" FontSize="20" Foreground="{DynamicResource B.Ok}"/>
+          </Border>
+          <StackPanel Margin="16,0,0,0">
+            <TextBlock Text="Restore onto this PC" Style="{StaticResource T.H3}" FontSize="15"/>
+            <TextBlock Text="On a fresh Windows: puts back apps, files, settings, tasks, services and your media server from a backup - you pick what." Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+          </StackPanel>
+        </DockPanel>
+      </Button>
+      <Button x:Name="ActVerify" Style="{StaticResource Btn.Card}" Margin="0,8,8,0">
+        <DockPanel>
+          <Border DockPanel.Dock="Left" Width="44" Height="44" CornerRadius="11" Background="{DynamicResource B.WarnSoft}" VerticalAlignment="Top">
+            <TextBlock Text="&#xE9D5;" Style="{StaticResource T.Icon}" FontSize="20" Foreground="{DynamicResource B.Warn}"/>
+          </Border>
+          <StackPanel Margin="16,0,0,0">
+            <TextBlock Text="Verify &amp; fix" Style="{StaticResource T.H3}" FontSize="15"/>
+            <TextBlock Text="Compares this PC with a backup and lists anything that is not back - or went missing later, e.g. after a Windows update - with one-click fixes." Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+          </StackPanel>
+        </DockPanel>
+      </Button>
+      <Button x:Name="ActMedia" Style="{StaticResource Btn.Card}" Margin="8,8,0,0">
+        <DockPanel>
+          <Border DockPanel.Dock="Left" Width="44" Height="44" CornerRadius="11" Background="{DynamicResource B.Surface3}" VerticalAlignment="Top">
+            <TextBlock Text="&#xE8B2;" Style="{StaticResource T.Icon}" FontSize="20" Foreground="{DynamicResource B.Text}"/>
+          </Border>
+          <StackPanel Margin="16,0,0,0">
+            <TextBlock Text="Media server &amp; smart home" Style="{StaticResource T.H3}" FontSize="15"/>
+            <TextBlock Text="Checks Jellyfin, Radarr, Sonarr, Prowlarr, Jackett, Seerr, Jellystat, Caddy and the Home Assistant VM - and sets up whatever is down." Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+          </StackPanel>
+        </DockPanel>
+      </Button>
+    </UniformGrid>
+
+    <DockPanel Margin="0,32,0,14">
+      <TextBlock DockPanel.Dock="Left" Text="Drives" Style="{StaticResource T.H2}"/>
+      <TextBlock x:Name="DrivesNote" Text="" Style="{StaticResource T.Small}" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+    </DockPanel>
+    <WrapPanel x:Name="Drives"/>
+
+    <TextBlock Text="Backups found" Style="{StaticResource T.H2}" Margin="0,30,0,14"/>
+    <StackPanel x:Name="Backups"/>
+  </StackPanel>
+</ScrollViewer>

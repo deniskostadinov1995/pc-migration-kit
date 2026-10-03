@@ -1,0 +1,222 @@
+<Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- ================================================================ 1. scan -->
+  <ScrollViewer x:Name="ScanView" VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="36,6,36,36" MaxWidth="1000" HorizontalAlignment="Left">
+      <TextBlock Text="Scan &amp; back up" Style="{StaticResource T.H1}"/>
+      <TextBlock Text="First the program looks at everything on this PC: programs, their settings, automations, Windows settings and every folder on the drives you pick. Nothing is changed or copied yet - next you choose what to keep." Style="{StaticResource T.Muted}" Margin="0,6,0,0" MaxWidth="760" HorizontalAlignment="Left"/>
+
+      <Border x:Name="AdminNote" Style="{StaticResource Card}" Margin="0,20,0,0" BorderBrush="{DynamicResource B.Warn}" Visibility="Collapsed">
+        <DockPanel>
+          <Button x:Name="AdminButton" DockPanel.Dock="Right" Style="{StaticResource Btn.Primary}" Content="Restart as administrator" VerticalAlignment="Center" Margin="16,0,0,0"/>
+          <StackPanel>
+            <TextBlock Text="Best run as administrator" Style="{StaticResource T.H3}"/>
+            <TextBlock Text="Without it the scan can't read every folder, the drivers and Windows features, and the backup itself always needs it (it copies open files through a snapshot)." Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+          </StackPanel>
+        </DockPanel>
+      </Border>
+
+      <Border Style="{StaticResource Card}" Margin="0,20,0,0">
+        <StackPanel>
+          <TextBlock Text="Drives to look at" Style="{StaticResource T.H3}"/>
+          <TextBlock Text="The Windows drive is always scanned. Other drives are scanned so you can see what's on them and pick folders - they're only copied if you tick them." Style="{StaticResource T.Muted}" Margin="0,4,0,12"/>
+          <WrapPanel x:Name="DriveChecks"/>
+          <Separator Margin="0,14,0,14" Background="{DynamicResource B.Border}"/>
+          <CheckBox x:Name="LookupCheck" Style="{StaticResource Switch}" IsChecked="True">
+            <StackPanel>
+              <TextBlock Text="Look up programs winget doesn't recognise by name" Foreground="{DynamicResource B.Text}"/>
+              <TextBlock Text="More programs can then be reinstalled automatically. Adds about a minute." Style="{StaticResource T.Small}"/>
+            </StackPanel>
+          </CheckBox>
+        </StackPanel>
+      </Border>
+
+      <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+        <Button x:Name="StartScan" Style="{StaticResource Btn.Primary}">
+          <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE721;" FontFamily="{StaticResource IconFont}" Margin="0,0,10,0" VerticalAlignment="Center"/><TextBlock Text="Start scan"/></StackPanel>
+        </Button>
+        <Button x:Name="CancelScan" Style="{StaticResource Btn}" Content="Stop" Margin="10,0,0,0" Visibility="Collapsed"/>
+      </StackPanel>
+
+      <Border x:Name="ScanProgress" Style="{StaticResource Card}" Margin="0,20,0,0" Visibility="Collapsed">
+        <StackPanel>
+          <DockPanel>
+            <TextBlock x:Name="ScanTime" DockPanel.Dock="Right" Text="" Style="{StaticResource T.Small}"/>
+            <TextBlock Text="Scanning" Style="{StaticResource T.H3}"/>
+          </DockPanel>
+          <Grid Margin="0,14,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <TextBlock x:Name="EngineIcon" Text="&#xE895;" Style="{StaticResource T.Icon}" FontSize="14" Foreground="{DynamicResource B.Accent}" VerticalAlignment="Top" Margin="0,2,0,0"/>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="Programs, settings and automations" Foreground="{DynamicResource B.Text}"/>
+              <TextBlock x:Name="EngineLine" Text="starting..." Style="{StaticResource T.Small}"/>
+            </StackPanel>
+          </Grid>
+          <StackPanel x:Name="DriveRows" Margin="0,4,0,0"/>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+
+  <!-- ================================================================ 2. choose -->
+  <Grid x:Name="ChooseView" Visibility="Collapsed">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <DockPanel Margin="36,6,36,14">
+      <Border DockPanel.Dock="Right" Width="300" VerticalAlignment="Bottom">
+        <Grid>
+          <TextBox x:Name="SearchBox" Padding="30,6,8,6"/>
+          <TextBlock Text="&#xE721;" Style="{StaticResource T.Icon}" FontSize="13" Foreground="{DynamicResource B.TextFaint}" HorizontalAlignment="Left" Margin="10,0,0,0" IsHitTestVisible="False"/>
+          <TextBlock x:Name="SearchHint" Text="Search everything" Foreground="{DynamicResource B.TextFaint}" Margin="31,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"/>
+        </Grid>
+      </Border>
+      <StackPanel>
+        <TextBlock Text="Choose what to keep" Style="{StaticResource T.H1}"/>
+        <TextBlock x:Name="ChooseLine" Text="" Style="{StaticResource T.Muted}" Margin="0,6,0,0"/>
+      </StackPanel>
+    </DockPanel>
+
+    <Grid Grid.Row="1" Margin="36,0,36,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="268"/>
+        <ColumnDefinition Width="16"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Border Style="{StaticResource Card}" Padding="8">
+        <ListBox x:Name="CatList" ItemTemplate="{StaticResource CatTemplate}" ItemContainerStyle="{StaticResource CatItem}"/>
+      </Border>
+      <Border Grid.Column="2" Style="{StaticResource Card}" Padding="0">
+        <Grid>
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+          <DockPanel Margin="20,16,16,10">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+              <Button x:Name="SelAll" Style="{StaticResource Btn.Ghost}" Content="Tick all"/>
+              <Button x:Name="SelNone" Style="{StaticResource Btn.Ghost}" Content="Untick all" Margin="4,0,0,0"/>
+            </StackPanel>
+            <StackPanel>
+              <TextBlock x:Name="CatTitle" Text="" Style="{StaticResource T.H2}"/>
+              <TextBlock x:Name="CatDesc" Text="" Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+            </StackPanel>
+          </DockPanel>
+          <TreeView x:Name="ItemTree" Grid.Row="1" Margin="10,0,8,10" ItemTemplate="{StaticResource ItemTemplate}"/>
+          <ListBox x:Name="SearchList" Grid.Row="1" Margin="10,0,8,10" Visibility="Collapsed" ItemContainerStyle="{StaticResource PlainItem}"
+                   VirtualizingStackPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Border Padding="8,5" Margin="0,1" CornerRadius="7" Background="Transparent">
+                  <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource ItemTemplate}"/>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <Border Grid.Row="2" Background="{DynamicResource B.Surface}" BorderBrush="{DynamicResource B.Border}" BorderThickness="0,1,0,0" Margin="0,16,0,0" Padding="36,14">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+          <Button x:Name="BackToScan" Style="{StaticResource Btn}" Content="Scan again"/>
+          <Button x:Name="ToDest" Style="{StaticResource Btn.Primary}" Margin="10,0,0,0">
+            <StackPanel Orientation="Horizontal"><TextBlock Text="Continue"/><TextBlock Text="&#xE72A;" FontFamily="{StaticResource IconFont}" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="11"/></StackPanel>
+          </Button>
+        </StackPanel>
+        <StackPanel VerticalAlignment="Center">
+          <TextBlock x:Name="TotalLine" Text="" Style="{StaticResource T.H3}"/>
+          <TextBlock x:Name="TotalSub" Text="" Style="{StaticResource T.Small}"/>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+  </Grid>
+
+  <!-- ================================================================ 3. destination -->
+  <ScrollViewer x:Name="DestView" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="36,6,36,36" MaxWidth="1000" HorizontalAlignment="Left">
+      <TextBlock Text="Where should the backup go?" Style="{StaticResource T.H1}"/>
+      <TextBlock Text="Pick a drive that is NOT the one you are replacing. An external drive or a second internal drive both work." Style="{StaticResource T.Muted}" Margin="0,6,0,0"/>
+      <WrapPanel x:Name="DestDrives" Margin="0,20,0,0"/>
+      <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+        <StackPanel>
+          <TextBlock Text="Folder" Style="{StaticResource T.H3}"/>
+          <DockPanel Margin="0,8,0,0">
+            <Button x:Name="Browse" DockPanel.Dock="Right" Style="{StaticResource Btn}" Content="Browse..." Margin="8,0,0,0"/>
+            <TextBox x:Name="DestBox"/>
+          </DockPanel>
+          <StackPanel x:Name="UpdatePanel" Margin="0,14,0,0" Visibility="Collapsed">
+            <RadioButton x:Name="UpdateRadio" GroupName="upd" Style="{StaticResource Segment}" Margin="0,0,0,8">
+              <StackPanel>
+                <TextBlock x:Name="UpdateTitle" Text="Update the backup that is already there" Style="{StaticResource T.H3}"/>
+                <TextBlock Text="Only copies what changed since - minutes instead of an hour. Recommended right before the switch." Style="{StaticResource T.Small}"/>
+              </StackPanel>
+            </RadioButton>
+            <RadioButton x:Name="NewRadio" GroupName="upd" Style="{StaticResource Segment}">
+              <StackPanel>
+                <TextBlock Text="Make a new, separate backup" Style="{StaticResource T.H3}"/>
+                <TextBlock Text="Copies everything again into a new folder next to it." Style="{StaticResource T.Small}"/>
+              </StackPanel>
+            </RadioButton>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      <Border x:Name="SpaceCard" Style="{StaticResource Card}" Margin="0,12,0,0">
+        <StackPanel>
+          <TextBlock x:Name="SpaceLine" Text="" Style="{StaticResource T.H3}"/>
+          <TextBlock x:Name="SpaceSub" Text="" Style="{StaticResource T.Muted}" Margin="0,4,0,0"/>
+        </StackPanel>
+      </Border>
+      <TextBlock Text="The backup holds Wi-Fi passwords, app logins and tokens. Keep it somewhere private." Style="{StaticResource T.Small}" Margin="0,14,0,0"/>
+      <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+        <Button x:Name="BackToChoose" Style="{StaticResource Btn}" Content="Back"/>
+        <Button x:Name="StartBackup" Style="{StaticResource Btn.Primary}" Margin="10,0,0,0">
+          <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE898;" FontFamily="{StaticResource IconFont}" Margin="0,0,10,0" VerticalAlignment="Center"/><TextBlock Text="Start the backup"/></StackPanel>
+        </Button>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+
+  <!-- ================================================================ 4. run / 5. done -->
+  <Grid x:Name="RunView" Visibility="Collapsed" Margin="36,6,36,24">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <StackPanel>
+      <TextBlock x:Name="RunTitle" Text="Backing up" Style="{StaticResource T.H1}"/>
+      <TextBlock x:Name="RunLine" Text="" Style="{StaticResource T.Muted}" Margin="0,6,0,0"/>
+    </StackPanel>
+    <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,18,0,0">
+      <StackPanel>
+        <DockPanel>
+          <TextBlock x:Name="OverallRight" DockPanel.Dock="Right" Text="" Style="{StaticResource T.Small}"/>
+          <TextBlock x:Name="OverallLeft" Text="Getting ready" Style="{StaticResource T.H3}"/>
+        </DockPanel>
+        <ProgressBar x:Name="OverallBar" Margin="0,10,0,0" Height="8" IsIndeterminate="True"/>
+        <DockPanel Margin="0,16,0,0">
+          <TextBlock x:Name="JobRight" DockPanel.Dock="Right" Text="" Style="{StaticResource T.Small}"/>
+          <TextBlock x:Name="JobLeft" Text="" Foreground="{DynamicResource B.Text}" TextTrimming="CharacterEllipsis"/>
+        </DockPanel>
+        <ProgressBar x:Name="JobBar" Margin="0,8,0,0" Height="4"/>
+        <TextBlock x:Name="JobFile" Text="" Style="{StaticResource T.Small}" Margin="0,6,0,0"/>
+      </StackPanel>
+    </Border>
+    <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,12,0,0" Padding="6">
+      <ListBox x:Name="LogList" ItemContainerStyle="{StaticResource PlainItem}" VirtualizingStackPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True"/>
+    </Border>
+    <DockPanel Grid.Row="3" Margin="0,14,0,0">
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+        <Button x:Name="OpenLog" Style="{StaticResource Btn.Ghost}" Content="Open log" Visibility="Collapsed"/>
+        <Button x:Name="OpenFolder" Style="{StaticResource Btn}" Content="Open backup folder" Margin="8,0,0,0" Visibility="Collapsed"/>
+        <Button x:Name="OpenReport" Style="{StaticResource Btn.Primary}" Content="Open the report" Margin="8,0,0,0" Visibility="Collapsed"/>
+        <Button x:Name="StopRun" Style="{StaticResource Btn.Danger}" Content="Stop" Margin="8,0,0,0"/>
+        <Button x:Name="NewRun" Style="{StaticResource Btn}" Content="Start over" Margin="8,0,0,0" Visibility="Collapsed"/>
+      </StackPanel>
+      <TextBlock x:Name="RunFoot" Text="You can keep using the PC. Close games and virtual machines for the most consistent copy." Style="{StaticResource T.Small}" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="None" Margin="0,0,16,0"/>
+    </DockPanel>
+  </Grid>
+</Grid>

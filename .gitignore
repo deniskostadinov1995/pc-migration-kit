@@ -1,0 +1,8 @@
+# Backups hold personal data: Wi-Fi passwords, tokens, app databases
+Backups/
+Scan report*.html
+
+# Build output (the exe is published under Releases)
+Source/build/
+*.exe
+*.log
